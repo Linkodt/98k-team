@@ -1,4 +1,3 @@
-import {resolve,reject} from "core-js/features/promise"
 /*
 	封装uni.request方法，实现异步效果
 	使用方法:

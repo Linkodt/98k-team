@@ -12,7 +12,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" >
+@import "uview-ui/index.scss";
+page{
+	background-color: #f7f7f7;
+}
 /* 解决头条小程序组件内引入字体不生效的问题 */
 /* #ifdef MP-TOUTIAO */
 @font-face {

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "华农学籽",
+  "usingComponents": {
+    "u-tabs": "/node-modules/uview-ui/components/u-tabs/u-tabs",
+    "canteen": "/pages/first_page/canteen/canteen"
+  }
+}

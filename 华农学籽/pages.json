@@ -1,29 +1,30 @@
 {
 	"pages": [
 		{
+		    "path" : "pages/loss_goods/loss_goods",
+		    "style": {
+		    	"navigationBarTitleText": "物品挂失"
+		    	}
+		}
+		,
+		{
             "path" : "pages/first_page/first_page",
             "style": {
             	"navigationBarTitleText": "华农学籽"
             	}
-        }
-        ,{
-            "path" : "pages/canteen_page/canteen_page",
-            "style": {
-            	"navigationBarTitleText": "食堂"
-            	}
-        }
-        ,{
-            "path" : "pages/dish_detail/dish_detail",
-            "style": {
-            	"navigationBarTitleText": "菜品详情"
-            	}
-        }
-        ,{
-            "path" : "pages/loss_goods/loss_goods",
-            "style": {
-            	"navigationBarTitleText": "物品挂失"
-            	}
-        }
+        },
+		{
+		    "path" : "pages/canteen_page/canteen_page",
+		    "style": {
+		    	"navigationBarTitleText": "食堂"
+		    	}
+		},
+		{
+		    "path" : "pages/dish_detail/dish_detail",
+		    "style": {
+		    	"navigationBarTitleText": "菜品详情"
+		    	}
+		}
         ,{
             "path" : "pages/help_order/help_order",
             "style": {
@@ -102,7 +103,7 @@
 				"pagePath": "pages/mine/mine",
 				"iconPath":"static/icon/1-8p/Icon-users@3x.png",
 				"selectedIconPath":"static/icon/1-8p/Icon-user-press@3x.png",
-				"text":"我的"
+				"text":"我" 
 			}
 			
 		]

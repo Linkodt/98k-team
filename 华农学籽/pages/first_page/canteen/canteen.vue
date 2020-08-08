@@ -1,6 +1,6 @@
 <template>
 	<view class="all_list" >
-		<view class="one" v-for="items in list" v-bind:key="items.name" >
+		<view class="one" v-for="items in list" v-bind:key="items.name" @click="naviTocanteen(items)" >
 			<view class="one_high_image">
 			<image :src="items.img" mode="aspectFit"  ></image>
 			</view>
@@ -31,7 +31,11 @@
 			}
 		},
 		methods: {
-			
+			naviTocanteen:function(e){
+				console.log("我点击了！！")
+				console.log(e)
+				console.log(e.name)
+			}
 		}
 	}
 </script>

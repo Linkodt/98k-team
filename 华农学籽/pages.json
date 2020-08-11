@@ -1,6 +1,10 @@
 {
 	"pages": [
 		{
+		    "path" : "pages/send_loss/send_loss",
+		    "style" : {}
+		},
+		{
 		    "path" : "pages/loss_goods/loss_goods",
 		    "style": {
 		    	"navigationBarTitleText": "物品挂失"
@@ -19,6 +23,13 @@
 		    	"navigationBarTitleText": "食堂"
 		    	}
 		},
+		{
+		    "path" : "pages/my_loss/my_loss",
+		    "style" : {
+				"navigationBarTitleText": "我的挂失"
+			}
+		}
+		,
 		{
 		    "path" : "pages/dish_detail/dish_detail",
 		    "style": {
@@ -79,6 +90,7 @@
 		    	"navigationBarTitleText": "增添菜品"
 		    	}
 		}
+        
         
     ],
 	"globalStyle": {

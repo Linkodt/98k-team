@@ -20,31 +20,31 @@
 		<view class="heng">
 			<image src="../../static/icon/1-8p/headline@2x.png" mode="widthFix" class="heng_img" ></image>
 		</view>
-		<view class="dish_list" @click="naviTo_detail" v-for="(item,index) in dish_list" v-bind:key="index" >
+		<view class="dish_list" @click="naviTo_detail(index)" v-for="(item,index) in dish_list" v-bind:key="index" >
 			<view class="dish_detail">
-				<image :src="item.img_src" mode=""></image>
+				<image :src="item.FoodPicture" mode=""></image>
 			</view>
 			<view class="dish_text">
 			<view class="dish_detail_head">
-			{{item.name}}
+			{{item.FoodName}}     {{item.Price}}元
 				<!-- <text class="dish_detail_head_text" ></text> -->
 			</view>
 			<view class="dish_detail_text">
-				{{item.detail}}
+				{{item.Introduction}}
 				<!-- <text></text> -->
 			</view>
 			<view class="dish_detail_down">
 				<view class="dish_detail_position">
-					{{item.position}}-{{item.window}}
+					{{item.Floor}}楼-{{item.Window}}号窗口
 				</view>
-				<view class="dish_detail_icon">
+				<view class="dish_detail_icon" v-bind:style="{marginLeft:styleO + 'vw'}" >
 					<view class="dish_detail_rank">
 						<image src="../../static/icon/20-/icon-like-press@2x.png" mode="widthFix"></image>
-						<text>{{item.rank}}</text>
+						<text>{{item.Praise}}</text>
 					</view>
 					<view class="dish_detail_pinglun">
 						<image src="../../static/icon/20-/icon-comment-disable@2x.png" mode="widthFix"></image>
-						<text>{{item.pinglun}}</text>
+						<text>{{item.Comment}}</text>
 					</view>
 				</view>
 			  </view>
@@ -54,78 +54,151 @@
 </template>
 
 <script>
+	var rap = getApp()
 	export default {
 		data() {
 			return {
+				styleO:30,
 				// picker元素相关
 				cateen_array: ['西园', '荷园', '绿榕园','稻香园','莘园','芷园'],
 				cateen_index:0,
+				// index + 1 就是对应的area值
 				// top部分三个功能相关
 				img_list:['帮助打饭','物品挂失','经理动态'],
 				img_index:0,
 				dish_list:[
 					{
-						name:"炸酱面",
-						img_src:"../../static/icon/1-8p/Image4.png",
-						position:"一楼",
-						window:"1号窗口",
-						rank:23,
-						pinglun:20,
-						detail:"炸酱，将肉丁及葱姜等放在油里炒，再加入黄豆制作的黄酱。。。。。。。。。。。。。"
-					},
-					{
-						name:"炸酱面",
-						img_src:"../../static/icon/1-8p/Image4.png",
-						position:"一楼",
-						window:"1号窗口",
-						rank:23,
-						pinglun:20,
-						detail:"炸酱，将肉丁及葱姜等放在油里炒，再加入黄豆制作的黄酱。。。。。。。。。。。。。"
-					},
-					{
-						name:"炸酱面",
-						img_src:"../../static/icon/1-8p/Image4.png",
-						position:"一楼",
-						window:"1号窗口",
-						rank:23,
-						pinglun:20,
-						detail:"炸酱，将肉丁及葱姜等放在油里炒，再加入黄豆制作的黄酱。。。。。。。。。。。。。"
-					},
-					{
-						name:"炸酱面",
-						img_src:"../../static/icon/1-8p/Image4.png",
-						position:"一楼",
-						window:"1号窗口",
-						rank:23,
-						pinglun:20,
-						detail:"炸酱，将肉丁及葱姜等放在油里炒，再加入黄豆制作的黄酱。。。。。。。。。。。。。"
-					},
-					{
-						name:"炸酱面",
-						img_src:"../../static/icon/1-8p/Image4.png",
-						position:"一楼",
-						window:"1号窗口",
-						rank:23,
-						pinglun:20,
-						detail:"炸酱，将肉丁及葱姜等放在油里炒，再加入黄豆制作的黄酱。。。。。。。。。。。。。"
+						FoodName:"暂无上菜",
+						FoodPicture:"../../static/icon/1-8p/Image4.png",
+						Floor:"一",
+						Window:"1",
+						Praise:23,
+						Comment:20,
+						Introduction:"暂无菜品，请联系食堂经理上菜",
+						Price:0,
+						area_or_judge:0
 					},
 				]
 			}
 		},
+		onLoad(e) {
+			var that = this
+			// console.log(e.name)
+			for (var i = 0; i < this.cateen_array.length; i++) {
+				if(this.cateen_array[i] == e.name){
+					that.cateen_index = i
+				}
+			}
+			console.log(rap.globalData.openid)
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/get_food",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					area:Number(that.cateen_index) + 1,  // 改成that.cateen_index + 1
+					openId:rap.globalData.openid
+				}
+			}).then(res=>{
+				// console.log(res)
+				// console.log(Date.now())
+				console.log("onload:",res.data.Food)
+				if(res.data.Food){
+					that.dish_list = res.data.Food
+				}
+				for (var i=0;i<that.dish_list.length;i++){
+					if(that.dish_list[i].Praise>999){// that.dish_list[i].Comment>999
+						that.dish_list[i].Praise = "999+"
+						that.styleO -= 5
+					}else if(that.dish_list[i].Praise>99){
+						that.styleO -= 5
+					}
+					if(that.dish_list[i].Comment>999){// that.dish_list[i].Comment>999
+						that.dish_list[i].Comment = "999+"
+						that.styleO -= 5
+					}else if(that.dish_list[i].Comment>99){
+						that.styleO -= 5
+					}
+					
+				}
+			})
+			
+		},
+		onShow(){
+			var that = this
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/get_food",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					area:Number(that.cateen_index) + 1,  // 改成that.cateen_index + 1
+					openId:rap.globalData.openid
+				}
+			}).then(res=>{
+				// console.log(res)
+				console.log("onShow:",res.data.Food)
+				that.dish_list = res.data.Food
+			})
+			// console.log(this.dish_list)
+		},
 		methods: {
 			picker_change:function(e){
+				var that = this
 				// picker相关
 				// console.log(e)
 				this.cateen_index = e.detail.value
+				that.request({
+					url:"http://www.garbageclassifier.club:8080/get_food",
+					method:"POST",
+					header:{
+						'Content-Type' : "application/x-www-form-urlencoded"
+					},
+					data:{
+						area:Number(that.cateen_index) + 1,  // 改成that.cateen_index + 1
+						openId:rap.globalData.openid
+					}
+				}).then(res=>{
+					// console.log(res)
+					// console.log(res.data.Food)
+					that.dish_list = res.data.Food
+				})
 			},
 			click_img:function(e){
+				var that = this
 				// top部分相关
 				this.img_index = e
-				console.log(this.img_list[this.img_index])
+				var index = Number(that.cateen_index) + 1
+				// console.log(this.img_list[this.img_index])
+				if(this.img_index==0){
+					// 帮忙打饭
+				}else if(this.img_index==1){
+					// 物品挂失
+					uni.navigateTo({
+						url:"/pages/loss_goods/loss_goods?area=" + index
+					})
+				}else if(this.img_index==2){
+					// 经理动态
+				}
 			},
 			naviTo_detail:function(e){
+				// console.log(e)
+				// console.log(this.dish_list[e].AreaOrJudge)
+				uni.setStorage({
+							key:'Food_detail',
+							data:{
+								FoodId:this.dish_list[e].FoodId,
+								FoodPicture:this.dish_list[e].FoodPicture,
+								Foodlike:this.dish_list[e].Praise,
+								FoodName:this.dish_list[e].FoodName,
+								Price:this.dish_list[e].Price,
+								area_or_judge:this.dish_list[e].AreaOrJudge==1? true : false
+							}
+							})
 				uni.navigateTo({
-					url:"../dish_detail/dish_detail",
+					url:"../dish_detail/dish_detail?FoodId=" + this.dish_list[e].FoodId,
 					success(res) {
 						console.log("跳转成功")
 					},
@@ -242,14 +315,13 @@
 		}
 		.dish_detail_icon {
 			display: inline-flex;
-			margin-left: 30vw;
 		  .dish_detail_rank {
 			image {
 				width: 40rpx;
 			}
 			text {
 				color: #9c9c9c;
-				font-size: 25rpx;
+				font-size: 30rpx;
 				padding-bottom: 2rpx;
 			}
 		  }
@@ -260,7 +332,7 @@
 			}
 			text {
 				color: #9c9c9c;
-				font-size: 25rpx;
+				font-size: 30rpx;
 				padding-bottom: 2rpx;
 			}
 		  }

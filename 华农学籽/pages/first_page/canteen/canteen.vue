@@ -2,7 +2,7 @@
 	<view class="all_list" >
 		<view class="one" v-for="items in list" v-bind:key="items.name" @click="naviTocanteen(items)" >
 			<view class="one_high_image">
-			<image :src="items.img" mode="aspectFit"  ></image>
+			<image :src="items.img" mode="widthFix"  ></image>
 			</view>
 			<view class="big_wenzi">
 				<text>{{items.name}}</text>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+	var rap = getApp()
 	export default {
 		data() {
 			return {
@@ -27,14 +28,25 @@
 					{name:"稻香园",position:"启林北",img:"../../../static/icon/1-8p/illustrator4@2x.png"},
 					{name:"莘园",position:"六一区",img:"../../../static/icon/1-8p/illustrator5@2x.png"},
 					{name:"芷园",position:"东区",img:"../../../static/icon/1-8p/illustrator6@2x.png"}
-				]
+				],
+				userInfo:{}
 			}
-		},
+		}
+		,
 		methods: {
 			naviTocanteen:function(e){
-				console.log("我点击了！！")
-				console.log(e)
 				console.log(e.name)
+				if(rap.globalData.userInfo.Name==""){ // 这里要改成==
+					uni.showModal({
+						content:"请到'我'页面进行登录",
+						showCancel:false,
+					})
+				}else{
+					uni.navigateTo({
+						url:"/pages/canteen_page/canteen_page?name=" + e.name
+					})
+				}
+				
 			}
 		}
 	}
@@ -51,15 +63,15 @@
 		// display: flex;
 		padding-left: 20rpx;
 		background-color: #fcfcfc;
-		margin-top: 40rpx;
-		margin-left: 50rpx;
-		width: 40%;
+		margin-top: 5vh;
+		margin-left: 6vw;
+		width: 40vw;
 		height: 300rpx;
 		.one_high_image{
 			margin-top: 15rpx;
 			image{
-				width: 80px;
-				height: 80px;
+				width: 20vw;
+				// height: 80px;
 			}
 		}
 		.big_wenzi{

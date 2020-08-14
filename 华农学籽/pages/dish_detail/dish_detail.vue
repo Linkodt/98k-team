@@ -2,17 +2,17 @@
 	<view>
 		<view class="top_list">
 			<view class="head">
-				炸酱面<text>12元</text>
+				{{Food.FoodName}}<text>{{Food.Price}}元</text>
 			</view>
-			<image src="../../static/icon/1-8p/Image4.png" mode="aspectFill" class="top_list_image"></image>
+			<image :src="Food.FoodPicture" mode="aspectFill" class="top_list_image"></image>
 			<view class="top_list_bottom">
 				<view class="top_list_bottom_pinglun">
 					<text>所有评论</text>
 				</view>
-				<view class="like" :class="{ highlight: isLike }">
-					<u-icon v-if="!isLike" name="heart" :size="40" color="#9a9a9a" @click="changeLike(index)"></u-icon>
-					<u-icon v-if="isLike" name="heart-fill" :size="40" @click="changeLike(index)"></u-icon>
-					<view class="num">{{isNum}}</view>
+				<view class="like" :class="{ highlight: Food.area_or_judge }">
+					<u-icon v-if="!Food.area_or_judge" name="heart" :size="40" color="#9a9a9a" @click="dishLike(Food.area_or_judge)"></u-icon>
+					<u-icon v-if="Food.area_or_judge" name="heart-fill" :size="40" color="#eba95f"  @click="dishLike(Food.area_or_judge)"></u-icon>
+					<view class="num">{{Food.Foodlike}}</view>
 				</view>
 			</view>
 		</view>
@@ -24,7 +24,7 @@
 					<view class="name">{{ res.name }}</view>
 					<view class="like" :class="{ highlight: res.isLike }">
 						<u-icon v-if="!res.isLike" name="thumb-up" :size="30" color="#9a9a9a" @click="getLike(index)"></u-icon>
-						<u-icon v-if="res.isLike" name="thumb-up-fill" :size="30" @click="getLike(index)"></u-icon>
+						<u-icon v-if="res.isLike" name="thumb-up-fill" :size="30"  @click="getLike(index)"></u-icon>
 						<view class="num">{{ res.likeNum }}</view>
 					</view>
 				</view>
@@ -50,8 +50,8 @@
 		<view class="footer" :class="{ footer_bottom: !isbottom }" >
 			<view class="footer_center">
 				<u-icon name="chat-fill" :size="40" color="#eaa960" ></u-icon>
-				<input type="text" placeholder="写评论" placeholder-class="footer_center_input_placeholder" value="" class="footer_center_input" />
-				<text class="footer_center_text" >发送</text>
+				<input type="text" placeholder="写评论" placeholder-class="footer_center_input_placeholder" class="footer_center_input" @confirm="sendPL()" confirm-type="send" v-model="content" />
+				<text class="footer_center_text" @click="sendPL()"  >发送</text>
 			</view>
 		</view>
 		<!-- 底部评论栏结束 -->
@@ -59,78 +59,181 @@
 </template>
 
 <script>
+	var rap = getApp()
+	import moment from "moment"
 export default {
 	data() {
 		return {
-			commentList: [],
+			commentList: [
+			],
+			Food:{
+				FoodName:"麻辣烫",
+				FoodId:null,
+				FoodPicture:"../../static/icon/1-8p/Image4.png",
+				Foodlike:20,
+				Price:12,
+				area_or_judge:false
+			},
 			isLike:false,
-			isNum:23,
-			isbottom:false
+			// 评论栏是否到底
+			isbottom:false,
+			FoodId:null,
+			content:"",
+			// Code:null
 		};
 	},
-	onLoad() {
-		this.getComment();
+	onLoad(e) {
+		var that = this
+		console.log(e.FoodId)
+		uni.getStorage({
+			key:"Food_detail",
+			success:(res)=>{
+				console.log(res)
+				that.Food = res.data
+			}
+		})
+		this.FoodId = Number(e.FoodId)
+		this.getComment(Number(e.FoodId));
 	},
 	methods: {
-		// 点赞
+		// 点赞评论
 		getLike(index) {
+			var that = this
+			// console.log(index)  //  0 1 2 3
 			this.commentList[index].isLike = !this.commentList[index].isLike;
 			if (this.commentList[index].isLike == true) {
 				this.commentList[index].likeNum++;
 			} else {
 				this.commentList[index].likeNum--;
 			}
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/comment_praise",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					commentId:this.commentList[index].CommentId,
+					openId:rap.globalData.openid
+				}
+			})
+		},
+		// 点赞菜
+		dishLike(area_or_judge){
+			var that = this
+			// console.log(area_or_judge)
+			this.onpresscTime = Date.now()
+			if(!area_or_judge){
+				// 点赞逻辑
+				++that.Food.Foodlike
+			}else{
+				// 取消点赞逻辑
+				--that.Food.Foodlike
+				}
+				console.log(typeof(Number(that.FoodId)))
+				console.log(rap.globalData.openid)
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/food_praise",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					foodId:Number(that.FoodId),
+					openId:rap.globalData.openid
+				}
+			}).then(res=>{
+				console.log(res)
+			})
+			that.Food.area_or_judge = !that.Food.area_or_judge
 		},
 		// 评论列表
-		getComment() {
-			this.commentList = [
-				{
-					id: 1,
-					name: '可达鸭小团队',
-					date: '12-25 18:58',
-					contentText: '太好吃了呜呜呜呜，太好吃了呜呜呜呜太好吃了呜呜呜呜，太好吃了呜呜呜呜',
-					url: 'https://cdn.uviewui.com/uview/template/SmilingDog.jpg',
-					likeNum: 33,
-					isLike: false,
-				},
-				{
-					id: 2,
-					name: '可达鸭小团队',
-					date: '01-25 13:58',
-					contentText: '太好吃了2333太好吃了2333，太好吃了2333太好吃了2333，太好吃了2333',
-					allReply: 0,
-					likeNum: 11,
-					isLike: false,
-					url: 'https://cdn.uviewui.com/uview/template/niannian.jpg',
-				},
-				{
-					id: 3,
-					name: '可达鸭小团队',
-					date: '03-25 13:58',
-					contentText: '我不信有这么好吃',
-					likeNum: 21,
-					isLike: false,				
-					url: '../../static/icon/1-8p/459.png',
-				},
-				{
-					id: 4,
-					name: '可达鸭小团队',
-					date: '06-20 13:58',
-					contentText: '真的假的?',
-					url: 'https://cdn.uviewui.com/uview/template/SmilingDog.jpg',
-					likeNum: 150,
-					isLike: false
-				}
-			];
+		getComment(e) {
+			var that = this
+			// console.log(e)
+			// console.log(rap.globalData.openid)
+			that.getPL(e)
 		},
-		changeLike(index){
-			this.isLike = !this.isLike;			
-			console.log(this.isLike)
-			if (this.isLike == true) {
-				this.isNum++;
-			} else {
-				this.isNum--;
+		// 发表评论
+		sendPL(){
+			var that = this
+			// console.log(that.content)
+			// console.log(typeof(that.FoodId))
+			if(that.content.length<=120)
+			{
+				that.request({
+					url:"http://www.garbageclassifier.club:8080/post_comment",
+					method:"POST",
+					header:{
+						'Content-Type' : "application/x-www-form-urlencoded"
+					},
+					data:{
+						foodId:Number(that.FoodId),
+						content:that.content,
+						openId:rap.globalData.openid
+					}
+				}).then(res=>{
+					that.content = ""
+					// that.Code = res.data.Code
+					console.log(res)
+					if(res.data.Code==401){
+						uni.showToast({
+							title:"评论超过2次",
+							icon:"none",
+							duration:2000
+						})
+					}else if(res.data.Code==200){
+						uni.showToast({
+							title:"评论成功",
+							icon:"none",
+							duration:2000
+						})
+					}
+					// 已经发过请求了
+					// 获取列表
+					that.getPL(Number(that.FoodId))
+				})
+			}else{
+				uni.showToast({
+					title:"输入文字过长，重新输入",
+					icon:"none"
+				})
 			}
+		},
+		// 获取评论的函数封装
+		getPL(e){
+			var that = this
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/get_comment",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					foodId:e,
+					openId:rap.globalData.openid
+				}
+			}).then(res=>{
+				that.commentList = []
+				console.log(res.data.Comment)
+				// 解析数据
+				for(var i=0;i<res.data.Comment.length;i++)
+				{
+					var day = moment.unix(res.data.Comment[i].Time).format("YYYY/MMM/D-k:m")
+					var data = {
+						name:res.data.Comment[i].CommentUser.Name,
+						// date 时间戳
+						date:day,
+						contentText:res.data.Comment[i].Content,
+						url:res.data.Comment[i].CommentUser.Picture,
+						likeNum:res.data.Comment[i].Praise,
+						isLike:res.data.Comment[i].Judge==1?true:false,
+						CommentId:res.data.Comment[i].CommentId
+					}
+					that.commentList.push(data)
+				}
+				
+			})
 		}
 	},
 	onReachBottom() {
@@ -176,7 +279,7 @@ export default {
 			display: block;
 			text{
 				margin-top: 10rpx;
-				font-size: 40rpx;
+				font-size: 35rpx;
 				font-weight: bold;
 			}
 	    }
@@ -185,8 +288,8 @@ export default {
 	    	display: flex;
 	    	align-items: center;
 	    	color: #9a9a9a;
-	    	font-size: 40rpx;
-			margin-left: 60vw;
+	    	font-size: 35rpx;
+			margin-left: 57vw;
 	    	.num {
 	    		margin-right: 4rpx;
 	    		color: #9a9a9a;

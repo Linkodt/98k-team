@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"node-modules/uview-ui/components/u-tabs/u-tabs":1,"pages/first_page/canteen/canteen":1,"node-modules/uview-ui/components/u-icon/u-icon":1};
+/******/ 		var cssChunks = {"node-modules/uview-ui/components/u-tabs/u-tabs":1,"pages/first_page/canteen/canteen":1,"node-modules/uview-ui/components/u-form-item/u-form-item":1,"node-modules/uview-ui/components/u-input/u-input":1,"node-modules/uview-ui/components/u-upload/u-upload":1,"node-modules/uview-ui/components/u-button/u-button":1,"node-modules/uview-ui/components/u-form/u-form":1,"node-modules/uview-ui/components/u-icon/u-icon":1,"node-modules/uview-ui/components/u-line-progress/u-line-progress":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"node-modules/uview-ui/components/u-tabs/u-tabs":"node-modules/uview-ui/components/u-tabs/u-tabs","pages/first_page/canteen/canteen":"pages/first_page/canteen/canteen","node-modules/uview-ui/components/u-icon/u-icon":"node-modules/uview-ui/components/u-icon/u-icon"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"node-modules/uview-ui/components/u-tabs/u-tabs":"node-modules/uview-ui/components/u-tabs/u-tabs","pages/first_page/canteen/canteen":"pages/first_page/canteen/canteen","node-modules/uview-ui/components/u-form-item/u-form-item":"node-modules/uview-ui/components/u-form-item/u-form-item","node-modules/uview-ui/components/u-input/u-input":"node-modules/uview-ui/components/u-input/u-input","node-modules/uview-ui/components/u-upload/u-upload":"node-modules/uview-ui/components/u-upload/u-upload","node-modules/uview-ui/components/u-button/u-button":"node-modules/uview-ui/components/u-button/u-button","node-modules/uview-ui/components/u-form/u-form":"node-modules/uview-ui/components/u-form/u-form","node-modules/uview-ui/components/u-icon/u-icon":"node-modules/uview-ui/components/u-icon/u-icon","node-modules/uview-ui/components/u-line-progress/u-line-progress":"node-modules/uview-ui/components/u-line-progress/u-line-progress"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

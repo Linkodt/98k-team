@@ -62,7 +62,7 @@
 }
 .top_list .top_list_bottom .top_list_bottom_pinglun text {
   margin-top: 10rpx;
-  font-size: 40rpx;
+  font-size: 35rpx;
   font-weight: bold;
 }
 .top_list .top_list_bottom .like {
@@ -73,8 +73,8 @@
   -webkit-align-items: center;
           align-items: center;
   color: #9a9a9a;
-  font-size: 40rpx;
-  margin-left: 60vw;
+  font-size: 35rpx;
+  margin-left: 57vw;
 }
 .top_list .top_list_bottom .like .num {
   margin-right: 4rpx;

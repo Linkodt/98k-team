@@ -142,14 +142,13 @@
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: inline-flex;
-  margin-left: 30vw;
 }
 .dish_list .dish_text .dish_detail_down .dish_detail_icon .dish_detail_rank image {
   width: 40rpx;
 }
 .dish_list .dish_text .dish_detail_down .dish_detail_icon .dish_detail_rank text {
   color: #9c9c9c;
-  font-size: 25rpx;
+  font-size: 30rpx;
   padding-bottom: 2rpx;
 }
 .dish_list .dish_text .dish_detail_down .dish_detail_icon .dish_detail_pinglun {
@@ -160,7 +159,7 @@
 }
 .dish_list .dish_text .dish_detail_down .dish_detail_icon .dish_detail_pinglun text {
   color: #9c9c9c;
-  font-size: 25rpx;
+  font-size: 30rpx;
   padding-bottom: 2rpx;
 }
 page {

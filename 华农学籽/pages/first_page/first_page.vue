@@ -12,6 +12,7 @@
 
 <script>
 	import Canteen from "./canteen/canteen.vue"
+	var rap = getApp()
 	export default {
 		data() {
 			return {
@@ -20,7 +21,8 @@
 				}, {
 					name: '饭堂咨询'
 				}],
-				current: 1
+				current: 1,
+				code:""
 			}
 		},
 		methods: {
@@ -30,6 +32,32 @@
 		},
 		components:{
 			Canteen
+		},
+		onLoad() {
+			var that = this
+			uni.login({
+				// timeout:0,
+			}).then(res=>{
+				console.log(res[1].code)
+				// that.code = res[1].code
+				uni.request({
+					url:"http://www.garbageclassifier.club:8080/login",
+					// url:"http://www.baidu.com",
+					method:"POST",
+					header:{
+						'Content-Type' : "application/x-www-form-urlencoded"
+					},
+					data:{
+						code:res[1].code
+					}
+				}).then(res=>{
+					console.log(res)
+					rap.globalData.openid = res[1].data.openid
+					rap.globalData.userInfo = res[1].data.User
+					
+					console.log(rap.globalData.openid)
+				})
+			})
 		}
 	}
 </script>

@@ -3,7 +3,7 @@
 		<view class="head" :class="{'head_filter':!isShow}" >
 			遗失物品信息
 		</view>
-		<view  class="all_list" :class="{'all_list_filter':!isShow}" v-for="(items,index) in list" v-bind:key="index" >
+		<view  class="all_list" :class="{'all_list_filter':!isShow}"  v-for="(items,index) in list" v-bind:key="index" >
 			<view class="all_list_head">
 				<image class="all_list_head_image" :src="items.head_src" mode="widthFix"></image>
 				<text class="all_list_head_name" >{{items.name}}</text>
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+	var rap = getApp()
+	import moment from "moment"
 	export default {
 		data() {
 			return {
@@ -77,7 +79,8 @@
 				]
 				,
 				// isShow:false
-				isShow:true
+				isShow:true,
+				area:0
 			}
 		},
 		methods: {
@@ -102,6 +105,69 @@
 					})
 				}
 			}
+		},
+		onLoad(e){
+			var that = this
+			console.log(e)
+			that.area = Number(e.area)
+			rap.globalData.area = Number(e.area)
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/get_loss",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					area:that.area
+				}
+			}).then(res=>{
+				console.log(res)
+				that.list = []
+				for (var i=0;i<res.data.Loss.length;i++){
+					var day = moment.unix(res.data.Loss[i].Time).format("YYYY年MMM月D日")
+					var data={
+						head_src:res.data.Loss[i].User.Picture,
+						name:res.data.Loss[i].Name,
+						time:day,
+						detail:res.data.Loss[i].Introduction,
+						connection:res.data.Loss[i].Phone,
+						wp_src:res.data.Loss[i].Picture
+					}
+					that.list.push(data)
+				}
+				
+			})
+		},
+		onShow(){
+			var that = this
+			// console.log(e)
+			// that.area = Number(e.area)
+			that.request({
+				url:"http://www.garbageclassifier.club:8080/get_loss",
+				method:"POST",
+				header:{
+					'Content-Type' : "application/x-www-form-urlencoded"
+				},
+				data:{
+					area:that.area
+				}
+			}).then(res=>{
+				console.log(res)
+				that.list = []
+				for (var i=0;i<res.data.Loss.length;i++){
+					var day = moment.unix(res.data.Loss[i].Time).format("YYYY年MMM月D日")
+					var data={
+						head_src:res.data.Loss[i].User.Picture,
+						name:res.data.Loss[i].Name,
+						time:day,
+						detail:res.data.Loss[i].Introduction,
+						connection:res.data.Loss[i].Phone,
+						wp_src:res.data.Loss[i].Picture
+					}
+					that.list.push(data)
+				}
+				
+			})
 		}
 	}
 </script>

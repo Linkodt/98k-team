@@ -8,7 +8,14 @@ export default {
 	},
 	onHide: function() {
 		console.log('App Hide');
-	}
+	},
+	globalData: {  
+	            userInfo:{
+					Name:""
+				},
+				openid:"",
+				area:-1
+	        }
 };
 </script>
 
